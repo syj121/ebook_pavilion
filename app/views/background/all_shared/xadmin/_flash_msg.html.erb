@@ -1,0 +1,17 @@
+<% if flash.present? && flash.keys.all?(&:present?) %>
+  <% flash.each do |status, msg| %>
+    <% next unless [:error, :success, :notice, :alert].include?(status.to_sym) %>
+    <% if [:success].include?(status.to_sym) %>
+      <% title = "提示：" %>
+      <% icon_no = 1 %>
+      <% msg = "操作成功！" if msg.blank? %>
+    <% else %>
+      <% title = [:error].include?(status.to_sym) ? "错误：" : "提示：" %>
+      <% icon_no = [:error].include?(status.to_sym) ? 2 : 0 %>
+      <% status = "info" if status.to_s == "notice" %>
+    <% end -%>
+    <script type="text/javascript">
+      layer.open({title: '<%= title %>', content: '<%= msg.to_s.html_safe %>', icon: <%= icon_no %>});  
+    </script>
+  <% end %>
+<% end -%>

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= $settings[:site_name] %></title>
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= stylesheet_link_tag    'xadmin/application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_include_tag 'xadmin/application', 'data-turbolinks-track': 'reload' %>
+  </head>
+
+  <body class="index">
+
+
+    <div class="layui-fluid">
+      <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+          <div class="layui-card">
+            <%= yield %>
+          </div>
+        </div>
+      </div>
+    </div> 
+
+    <%= render "/background/all_shared/#{$settings.frame}/flash_msg"%>
+    
+  </body>
+</html>

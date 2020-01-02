@@ -1,0 +1,23 @@
+<div class="container">
+  <div class="logo">
+    <%= link_to $settings.site_name, background_path%>
+  </div>
+
+  <div class="left_open">
+    <a><i title="展开左侧栏" class="iconfont">&#xe699;</i></a>
+  </div>
+
+  <ul class="layui-nav right" lay-filter="">
+    <li class="layui-nav-item">
+      <a href="javascript:;"><%= current_user.login_name %></a>
+    </li>
+    <li class="layui-nav-item">
+      <% if current_user.blank? %>
+        <%= link_to "登录", new_session_path%>
+      <% else %>
+        <%= link_to "登出", destroy_user_session_path, method: :delete%>
+      <% end %>
+    </li>
+  </ul>
+  
+</div>

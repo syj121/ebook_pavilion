@@ -1,0 +1,26 @@
+zh-CN:
+  simple_captcha:
+    placeholder: "验证码"
+    refresh_button_text: "刷新"
+  devise:
+    failure:
+      user:
+        unauthenticated: "请先登录"
+    sessions:
+      user:
+        signed_in: "登录成功"
+  views:
+    pagination:
+      first: "首页"
+      last: "末页"
+      previous: "&lsaquo; 上一页"
+      next: "下一页 &rsaquo;"
+      truncate: "&hellip;"
+  number:
+    currency:
+      format:
+        format: "%u%n"
+        unit: "¥"
+        separator: "."
+        delimiter: ","
+        precision: 2
