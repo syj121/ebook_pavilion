@@ -24,3 +24,12 @@ class Time
   end
 
 end
+
+class String
+  def to_utf8
+    encode("UTF-8", :undef => :replace, :replace => "?", :invalid => :replace).chars.select{|i| i.valid_encoding?}.join
+  end
+end
+
+#active_record 通用方法
+ActiveRecord::Base.send(:include, ActiveRecordPlus)

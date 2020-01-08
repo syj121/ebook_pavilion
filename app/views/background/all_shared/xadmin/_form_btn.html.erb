@@ -1,0 +1,7 @@
+<% label_name ||= "提交"%>
+<%= hidden_field_tag "back", params[:back]%>
+<div class="layui-form-item">
+  <label for="L_repass" class="layui-form-label"></label>
+  <button class="layui-btn" lay-submit lay-filter=""><%= label_name %></button>
+  <%= link_to "返回", params[:back], class: "layui-btn" if params[:back].present? %>
+</div>

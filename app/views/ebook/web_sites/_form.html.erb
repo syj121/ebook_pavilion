@@ -1,0 +1,15 @@
+<div class="layui-fluid">
+  <div class="layui-row">
+    <%= simple_form_for [:ebook, @web_site] do |f|%>
+
+      <%= hidden_field_tag :back, params[:back]%>
+
+      <%= f.input :name %>
+      <%= f.input :code %>
+      <%= f.input :url %>
+      <%= f.input :remark, label: "说明", input_html: {class: "layui-textarea"}%>
+
+      <%= render form_btn, f: f%>
+    <% end %>
+  </div>
+</div>

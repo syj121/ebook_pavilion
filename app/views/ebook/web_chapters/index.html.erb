@@ -1,0 +1,37 @@
+<%= render "search"%>
+
+<div class="layui-card-header">
+  <%= link_to_icon "返回", ebook_web_books_path %>
+  <%= link_to_icon "刷新列表", refresh_ebook_web_book_web_chapters_path(@web_book, type: "chapters"), remote: true %>
+</div>
+
+<div class="layui-card-body layui-table-body layui-table-main">
+  <table class="layui-table layui-form">
+    <thead>
+      <tr>
+        <th>序号</th>
+        <th>图书名</th>
+        <th>章节名</th>
+        <th>创建日期</th>
+        <th>操作</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @web_chapters.each_with_index do |web_chapter, index|%>
+        <tr id="web_chapter_<%= web_chapter.id%>">
+          <td><%= index + 1%></td>
+          <td><%= web_chapter.web_book.name %></td>
+          <td><%= link_to_blank web_chapter.title, web_chapter.url %></td>
+          <td><%= web_chapter.created_at %></td>
+          <td class="td-manage x-admin-sm">
+            <%= link_to_icon "刷新", refresh_ebook_web_book_web_chapters_path(@web_book, wcid: web_chapter.id, type: "contents"), remote: true%>
+            <%= link_to_icon "阅读", ebook_web_book_web_chapter_path(@web_book, web_chapter), target: "_blank"%>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+
+<%= paginate @web_chapters%>

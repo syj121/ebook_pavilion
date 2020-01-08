@@ -84,3 +84,5 @@ gem "rest-client"
 gem "closure_tree"
 # xml解析
 gem "nokogiri"
+# 后台任务
+gem 'rufus-scheduler'

@@ -1,0 +1,25 @@
+<div class="layui-col-md12">
+  <div class="layui-card">
+    <div class="layui-card-header">
+      <h1><%= @web_book.name%></h1>
+    </div>
+
+    <div class="layui-card-body ">
+      <table class="layui-table">
+        <tbody>
+
+          <tr>
+            <td class="textc"><%= @web_chapter.title %></td>
+          </tr>
+
+          <tr>
+            <td><%= @web_chapter.content.content.html_safe rescue "暂无"%></td>
+          </tr>
+
+
+        </tbody>
+      </table>
+
+    </div>
+  </div>
+</div>

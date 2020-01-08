@@ -1,0 +1,30 @@
+<div class="layui-col-md12">
+  <div class="layui-card">
+    <div class="layui-card-header">
+      <h1><%= @web_book.name%></h1>
+    </div>
+
+    <div class="layui-card-body ">
+      <table class="layui-table">
+        <tbody>
+
+          <tr>
+            <th>类别名称</th>
+            <td><%= link_to @web_book.web_site.name, @web_book.url%></td>
+
+            <th>图书名</th>
+            <td><%= @web_book.name%></td>
+          </tr>
+
+          <tr>
+            <th>摘要</th>
+            <td colspan="3"><%= @web_book.depcit%></td>
+          </tr>
+
+
+        </tbody>
+      </table>
+
+    </div>
+  </div>
+</div>

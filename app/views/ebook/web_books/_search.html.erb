@@ -1,0 +1,8 @@
+<div class="layui-card-body">
+  <%= simple_form_for @q, url: ebook_web_books_path, method: :get do |f|%>
+    <div class="layui-inline layui-show-xs-block">
+      <%= f.text_field :name_cont, placeholder: "来源网站-图书名", class: "layui-input" %>
+    </div>
+    <%= render search_form_btn, f: f%>
+  <% end %>
+</div>

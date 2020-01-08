@@ -1,0 +1,38 @@
+<div class="layui-col-md12">
+  <div class="layui-card">
+    <div class="layui-card-header">
+      <h1><%= @web_site.name%></h1>
+    </div>
+
+    <div class="layui-card-body ">
+      <table class="layui-table">
+        <tbody>
+
+          <tr>
+            <th>网站名称</th>
+            <td><%= link_to @web_site.name, @web_site.url%></td>
+
+            <th>网站编号</th>
+            <td><%= @web_site.code%></td>
+          </tr>
+
+          <tr>
+            <th>创建日期</th>
+            <td><%= @web_site.created_at%></td>
+
+            <th>网站地址</th>
+            <td><%= @web_site.url%></td>
+          </tr>
+
+          <tr>
+            <th>网站说明</th>
+            <td colspan="3"><%= @web_site.remark%></td>
+          </tr>
+
+
+        </tbody>
+      </table>
+
+    </div>
+  </div>
+</div>

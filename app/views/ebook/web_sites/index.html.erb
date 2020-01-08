@@ -1,0 +1,40 @@
+<%= render "search"%>
+
+<div class="layui-card-header">
+  <%= link_to_icon "新增", new_ebook_web_site_path %>
+</div>
+
+<div class="layui-card-body layui-table-body layui-table-main">
+  <table class="layui-table layui-form">
+    <thead>
+      <tr>
+        <th>序号</th>
+        <th>网站名称</th>
+        <th>网站编号</th>
+        <th>网站说明</th>
+        <th>创建日期</th>
+        <th>操作</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @web_sites.each_with_index do |web_site, index|%>
+        <tr id="web_site_<%= web_site.id%>">
+          <td><%= index + 1%></td>
+          <td><%= link_to_blank web_site.name, web_site.url %></td>
+          <td><%= web_site.code %></td>
+          <td><%= web_site.remark %></td>
+          <td><%= web_site.created_at %></td>
+          <td class="td-manage x-admin-sm">
+            <%= link_to_icon "修改", edit_ebook_web_site_path(web_site) %>
+            <%= link_to_dialog "查看", ebook_web_site_path(web_site), remote: true%>
+            <%= link_to_icon "类别抓取", categories_ebook_snatches_path(code: web_site.code), remote: true%>
+            <%= link_to_icon "查看类别", ebook_web_categories_path("q[web_site_id_eq]" => web_site.id), target: "_blank"%>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+
+<%= paginate @web_sites%>

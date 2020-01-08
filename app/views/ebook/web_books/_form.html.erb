@@ -1,0 +1,15 @@
+<div class="layui-fluid">
+  <div class="layui-row">
+    <%= simple_form_for [:ebook, @web_book] do |f|%>
+
+      <%= f.input :name %>
+      <%= f.input :code %>
+      <%= f.input :web_site_id, collection: WebSite.pluck(:name, :id) %>
+      <%= f.input :url %>
+      <%= f.input :cover_url %>
+      <%= f.input :book_id, collection: Book.pluck(:name, :id) %>
+
+      <%= render form_btn, f: f%>
+    <% end %>
+  </div>
+</div>
