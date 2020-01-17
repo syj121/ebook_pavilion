@@ -34,3 +34,5 @@
 /tmp
 /Gemfile.lock
 /db/schema.rb
+/ebooks
+/.idea

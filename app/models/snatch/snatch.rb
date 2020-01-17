@@ -32,6 +32,10 @@ class Snatch
   #同步网站所有的图书
   def self.books(code, opts={})
     web_site = WebSite.find_by(code: code)
+    lot_number = "#{Time.now.to_s(:number)}---books"
+    web_site.web_books.find_each do |web_book|
+      book(web_book, {lot_number: lot_number})
+    end
   end
 
   #web_book: 来源网站图书。 根据url，获取某一本书籍
@@ -50,10 +54,12 @@ class Snatch
         obj.chapter_url = attrs[:chapter_url]
         obj.cover_url = attrs[:cover_url]
         obj.depcit = attrs[:depcit]
+        obj.find_web_category(attrs[:cate])  #获取网站类别
+        obj.find_web_author(attrs[:author])  #获取网站作者
         obj
       end
     end
-    chapters(web_book, {lot_number: lot_number}.merge(opts))
+    #chapters(web_book, {lot_number: lot_number}.merge(opts))
     log_p lot_number, "book", code, "本次抓取结束。"
     #本次日志
     return "网站：#{web_site.name}，正在获取书籍，请稍后"
@@ -103,7 +109,8 @@ class Snatch
       ActiveRecord::Base.connection_pool.with_connection do 
         log_p lot_number, "contents", code, "本次抓取开始，批次号为：#{lot_number}。"
         @num,@new_num,@update_num,@error_num=0,0,0,0
-        web_chapters.each do |web_chapter|
+        web_chapters.includes(:content).each do |web_chapter|
+          next if web_chapter.content.present?
           sleep rand(5)
           obj_mod.contents(web_chapter, opts) do |*args, attrs|
             opts = args.extract_options!
@@ -122,6 +129,7 @@ class Snatch
   end
 
   def self.rc(url, opts = {})
+    sleep rand(5)
     begin
       opts[:method] ||= "get"
       opts[:cookie] ||= false
@@ -170,7 +178,7 @@ class Snatch
   def self.gen_attrs_log(lot_number, method_name, code, obj, attrs={})
     log_p(lot_number, method_name, code, "返回：#{attrs}")
     yield(obj)
-    return 0 unless obj.changed?
+    return 0 if method_name != "contents" && !obj.changed?
 
     #记录处理解析结果的日志
     @num += 1

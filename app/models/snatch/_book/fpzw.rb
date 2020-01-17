@@ -7,7 +7,6 @@ module Fpzw
 
   #抓取类别，返回参数
   def self.categories(opts={})
-    yield(opts, code: "code", url: "url", name: "name")
     doc = Snatch.rc "https://www.fpzw.com/"
     doc.css(".nav2 a.book_sort").each do |a|
       code = a.attr("href").split("/").last
@@ -20,13 +19,19 @@ module Fpzw
   def self.book(web_book, opts={})
     url = web_book.url
     doc = Snatch.rc(url)
-    a = doc.css("#title h2 a")
+    a = doc.css("#title h2 a")[0]
     name = a.text.strip
-    chapter_url = a.attr("href").value
+    chapter_url = a.attr("href")
     code = url.gsub("https://www.fpzw.com/xiaoshuo/", "")
     cover_url = "https://www.fpzw.com#{doc.css(".bortable img")[0].attr("src")}" rescue nil
     depcit = doc.css(".wright p.Txt").text.strip
-    yield(opts, name: name, chapter_url: chapter_url, cover_url: cover_url, depcit: depcit)
+    cate_name = doc.css(".winfo li span")[0].text.strip
+
+    #作者
+    author_a = doc.css("#title h2 em a")
+    author_name = author_a.text.strip
+    author_link = "https://www.fpzw.com#{author_a.attr("href")}"
+    yield(opts, name: name, chapter_url: chapter_url, cover_url: cover_url, depcit: depcit, cate: {name: cate_name}, author: {name: author_name, url: author_link})
   end
 
   def self.chapters(web_book, opts={})
@@ -44,7 +49,7 @@ module Fpzw
 
   def self.contents(chapter, opts={})
     doc = Snatch.rc(chapter.url, {encoding: "gbk"})
-    content = doc.css(".Text").inner_html()
+    content = doc.css(".Text").inner_html().split("</script>").last.gsub("2k小说阅读网","")
     yield(opts, content: content)
   end
 

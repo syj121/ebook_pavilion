@@ -22,5 +22,14 @@ module Ebook
       redirect_to params[:back]
     end
 
+    def download
+      url = @web_book.download
+      if url.present?
+        send_file(url)
+      else
+        redirect_to params[:back]
+      end
+    end
+
   end
 end

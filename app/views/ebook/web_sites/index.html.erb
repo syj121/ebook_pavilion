@@ -27,6 +27,7 @@
           <td><%= web_site.created_at %></td>
           <td class="td-manage x-admin-sm">
             <%= link_to_icon "修改", edit_ebook_web_site_path(web_site) %>
+            <%= link_to_icon "删除", ebook_web_site_path(web_site), method: :delete %>
             <%= link_to_dialog "查看", ebook_web_site_path(web_site), remote: true%>
             <%= link_to_icon "类别抓取", categories_ebook_snatches_path(code: web_site.code), remote: true%>
             <%= link_to_icon "查看类别", ebook_web_categories_path("q[web_site_id_eq]" => web_site.id), target: "_blank"%>

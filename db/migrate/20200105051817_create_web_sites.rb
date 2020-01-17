@@ -73,7 +73,8 @@ class CreateWebSites < ActiveRecord::Migration[5.2]
       t.string :name, null: false, default: "", unique: true, comment: "作者"
       t.references :web_site, foreign_key: true, comment: "来源网站"
       t.text :depcit, comment: "来源网站-作者说明"
-      t.references :author, foreign_key: true, comment: "平台作者"
+      t.integer :author_id, index: true, comment: "平台作者"
+      t.string :url, comment: "网站作者URL"
       t.timestamps
       t.index [:web_site_id, :name], unique: true
     end
@@ -84,7 +85,7 @@ class CreateWebSites < ActiveRecord::Migration[5.2]
       t.references :web_site, foreign_key: true, comment: "来源网站"
       t.integer :web_author_id, index: true, comment: "来源网站-图书作者"
       t.integer :web_category_id, index: true, comment: "来源网站-图书类别"
-      t.integer :auther_id, default: 0, index: true, comment: "平台作者"
+      t.integer :author_id, default: 0, index: true, comment: "平台作者"
       t.integer :category_id, default: 0, index: true, comment: "平台类别"
       t.integer :book_id, default: 0, index: true, comment: "平台图书"
       t.string :url, null: false, default: "", comment: "图书链接"

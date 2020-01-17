@@ -1,6 +1,6 @@
 <div class="layui-fluid">
   <div class="layui-row">
-    <%= simple_form_for [:ebook, @web_site] do |f|%>
+    <%= simple_form_for [:ebook, @web_site],remote: true do |f|%>
 
       <%= hidden_field_tag :back, params[:back]%>
 
@@ -13,3 +13,12 @@
     <% end %>
   </div>
 </div>
+
+<script type="text/javascript">
+  $("form").submit(function(){
+  }).on("ajax:success", function(r, data, status, xhr){
+    alert(data)
+  }).on("ajax:complete", function(r){
+    debugger
+  })
+</script>

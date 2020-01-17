@@ -12,29 +12,34 @@
         <th>网站名称</th>
         <th>封面</th>
         <th>图书名称</th>
-        <th>源章节列表</th>
+        <th>源网站作者</th>
         <th>图书编号</th>
         <th>创建日期</th>
+        <th>分类</th>
         <th>操作</th>
       </tr>
     </thead>
 
     <tbody>
       <% @web_books.each_with_index do |web_book, index|%>
+        <% web_author = web_book.web_author %>
+        <% web_site = web_book.web_site%>
         <tr id="web_book_<%= web_book.id%>">
           <td><%= index + 1%></td>
-          <td><%= web_book.web_site.name %></td>
+          <td><%= link_to_blank web_site.name, web_site.url %></td>
           <td><%= image_tag(web_book.cover_url) rescue "暂无"%></td>
           <td><%= link_to_blank web_book.name, web_book.url %></td>
-          <td><%= link_to_blank web_book.chapter_url, web_book.chapter_url%></td>
+          <td><%= link_to_blank(web_author.name, web_author.url) if web_author.present?%></td>
           <td><%= web_book.code%></td>
           <td><%= web_book.created_at %></td>
+          <td><%= web_book.web_category.name rescue ""%></td>
           <td class="td-manage x-admin-sm">
             <%= link_to_dialog "查看", ebook_web_book_path(web_book), remote: true%>
             <%= link_to_icon "删除", ebook_web_book_path(web_book), method: :delete%>
             <%= link_to_icon "编辑", edit_ebook_web_book_path(web_book)%>
             <%= link_to_icon "章节列表", ebook_web_book_web_chapters_path(web_book)%>
             <%= link_to_icon "同步更新", book_ebook_snatches_path(book_id: web_book.id), remote: true%>
+            <%= link_to_icon "下载TXT", download_ebook_web_book_path(web_book)%>
           </td>
         </tr>
       <% end %>

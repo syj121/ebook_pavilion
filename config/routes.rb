@@ -32,6 +32,11 @@ Rails.application.routes.draw do
     end
     #来源网站-图书
     resources :web_books do 
+      member do 
+        get :download
+      end
+
+      #源网站图书章节
       resources :web_chapters do 
         collection do 
           get :refresh
