@@ -111,7 +111,6 @@ class Snatch
         log_p lot_number, "contents", code, "本次抓取开始，批次号为：#{lot_number}。"
         @num,@new_num,@update_num,@error_num=0,0,0,0
         web_chapters.includes(:contents).each do |web_chapter|
-          break if web_chapter.id == 826
           next if only_content && web_chapter.contents.present?
           #sleep rand(5)
           obj_mod.contents(web_chapter, opts.merge({position: 1})) do |*args, attrs|
