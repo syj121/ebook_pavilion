@@ -1,0 +1,10 @@
+<div class="layui-fluid">
+  <div class="layui-row">
+    <%= simple_form_for [:cloud, @book], html: {class: "layui-form"} do |f|%>
+
+      <%= hidden_field_tag :back, params[:back]%>
+      <%= f.input :name %>
+      <%= render form_btn, f: f%>
+    <% end %>
+  </div>
+</div>

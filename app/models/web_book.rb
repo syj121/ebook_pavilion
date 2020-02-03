@@ -50,11 +50,15 @@ class WebBook < ApplicationRecord
     scheduler = Rufus::Scheduler.new
     scheduler.in '3s' do
       File.open(url, "w") do |txt|
-        self.chapters.includes(:content).unscope(:order).each do |web_chapter, index|
-          web_content = web_chapter.content
-          next if web_content.blank?
+        self.chapters.includes(:contents).unscope(:order).each do |web_chapter, index|
+          content = ""
+          web_chapter.contents.unscope(:order).where(position: :asc).each do |web_content|
+            next if web_content.blank?
+            content += web_content.content + "\r\n"
+          end
           txt.syswrite(web_chapter.title+"\r\n")
-          content = web_content.content.to_s.gsub("<br><br>", "\r\n")
+          content = content.to_s.gsub("<br></br>", "<br>")
+          content = content.to_s.gsub("<br>", "\r\n")
           txt.syswrite(content+"\r\n")
         end
       end

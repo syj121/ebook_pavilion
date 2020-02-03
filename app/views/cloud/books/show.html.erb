@@ -1,7 +1,7 @@
 <div class="layui-col-md12">
   <div class="layui-card">
     <div class="layui-card-header">
-      <h1><%= @web_book.name%></h1>
+      <h1><%= @book.name%></h1>
     </div>
 
     <div class="layui-card-body ">
@@ -9,16 +9,21 @@
         <tbody>
 
           <tr>
-            <td class="textc"><%= @web_chapter.title %></td>
+            <th>类别名称</th>
+            <td><%= @book.category.name %></td>
+
+            <th>图书名</th>
+            <td><%= @book.name%></td>
           </tr>
 
           <tr>
-            <td><%= @contents[0].content.html_safe rescue "暂无"%></td>
+            <th>摘要</th>
+            <td colspan="3"><%= @book.depcit%></td>
           </tr>
+
         </tbody>
       </table>
 
-    <%= paginate @contents%>
     </div>
   </div>
 </div>

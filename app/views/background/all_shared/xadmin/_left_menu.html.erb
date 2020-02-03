@@ -5,7 +5,7 @@
       <li>
         <a href="javascript:;">
           <i class="iconfont left-nav-li" lay-tips="系统管理">&#xe6b8;</i>
-          <cite>系统管理</cite>
+          <cite>平台管理</cite>
           <i class="iconfont nav_right">&#xe697;</i>
         </a>
         <ul class="sub-menu">
@@ -21,10 +21,17 @@
       <li>
         <a href="javascript:;">
           <i class="iconfont left-nav-li" lay-tips="平台管理">&#xe6b8;</i>
-          <cite>平台管理</cite>
+          <cite>云资源</cite>
           <i class="iconfont nav_right">&#xe697;</i>
         </a>
         <ul class="sub-menu">
+          <li>
+            <a onclick="xadmin.add_tab('云图书','<%= cloud_books_path %>')">
+              <i class="iconfont">&#xe6a7;</i>
+              <cite>云图书</cite>
+            </a>
+          </li>
+
           <li>
             <a onclick="xadmin.add_tab('图书类别','<%= cloud_categories_path %>')">
               <i class="iconfont">&#xe6a7;</i>

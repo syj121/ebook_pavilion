@@ -1,0 +1,35 @@
+<%= render "search"%>
+
+<div class="layui-card-header">
+  <%= link_to_icon "新增", new_cloud_book_path %>
+</div>
+
+<div class="layui-card-body layui-table-body layui-table-main">
+  <table class="layui-table layui-form">
+    <thead>
+      <tr>
+        <th>序号</th>
+        <th>平台书名</th>
+        <th>类别名称</th>
+        <th>创建日期</th>
+        <th>操作</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @books.each_with_index do |book, index|%>
+        <tr id="book_<%= book.id%>">
+          <td><%= index + 1%></td>
+          <td><%= book.name %></td>
+          <td><%= book.category.name %></td>
+          <td><%= book.created_at %></td>
+          <td class="td-manage x-admin-sm">
+            <%= link_to_icon "编辑", edit_cloud_book_path(book)%>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+
+<%= paginate @books%>

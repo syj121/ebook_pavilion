@@ -50,6 +50,8 @@ Rails.application.routes.draw do
   namespace :cloud do
     #类别管理
     resources :categories
+    #云图书管理
+    resources :books
   end
   #云平台-图书管理
   

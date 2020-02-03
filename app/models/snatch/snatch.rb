@@ -104,17 +104,19 @@ class Snatch
     obj_mod = code.classify.constantize rescue nil
     return "网站：#{code}，未配置抓取章节内容" if !obj_mod.respond_to?"contents"
     lot_number = opts[:lot_number] || "#{Time.now.to_s(:number)}-contents"
+    only_content = obj_mod.only_content
     scheduler = Rufus::Scheduler.new
     scheduler.in '3s' do
       ActiveRecord::Base.connection_pool.with_connection do 
         log_p lot_number, "contents", code, "本次抓取开始，批次号为：#{lot_number}。"
         @num,@new_num,@update_num,@error_num=0,0,0,0
-        web_chapters.includes(:content).each do |web_chapter|
-          next if web_chapter.content.present?
-          sleep rand(5)
-          obj_mod.contents(web_chapter, opts) do |*args, attrs|
+        web_chapters.includes(:contents).each do |web_chapter|
+          break if web_chapter.id == 826
+          next if only_content && web_chapter.contents.present?
+          #sleep rand(5)
+          obj_mod.contents(web_chapter, opts.merge({position: 1})) do |*args, attrs|
             opts = args.extract_options!
-            c = WebBookContent.find_or_initialize_by(web_chapter_id: web_chapter.id)
+            c = WebBookContent.find_or_initialize_by(web_chapter_id: web_chapter.id, position: 1)
             #记录每次解析的日志
             gen_attrs_log(lot_number, "contents", code, c, attrs) do |obj|
               obj.content = attrs[:content]
@@ -129,6 +131,7 @@ class Snatch
   end
 
   def self.rc(url, opts = {})
+    puts url
     sleep rand(5)
     begin
       opts[:method] ||= "get"

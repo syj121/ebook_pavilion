@@ -27,6 +27,7 @@
           <td class="td-manage x-admin-sm">
             <%= link_to_icon "刷新", refresh_ebook_web_book_web_chapters_path(@web_book, wcid: web_chapter.id, type: "contents"), remote: true%>
             <%= link_to_icon "阅读", ebook_web_book_web_chapter_path(@web_book, web_chapter), target: "_blank"%>
+            <%= link_to_icon "删除", ebook_web_book_web_chapter_path(@web_book, web_chapter), method: :delete%>
           </td>
         </tr>
       <% end %>

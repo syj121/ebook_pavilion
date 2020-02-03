@@ -20,6 +20,15 @@ module Ebook
       render js: "layer_tip('提示', '#{re}')"
     end
 
+    def destroy
+      @web_chapter.destroy
+      redirect_to params[:back]
+    end
+
+    def show
+      @contents = @web_chapter.contents.unscope(:order).order(position: :asc).page(params[:page]).per(1)
+    end
+
     private
     def get_web_book
       @web_book = WebBook.find(params[:web_book_id])
