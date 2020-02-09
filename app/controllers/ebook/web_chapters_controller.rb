@@ -26,7 +26,7 @@ module Ebook
     end
 
     def show
-      @contents = @web_chapter.contents.unscope(:order).order(position: :asc).page(params[:page]).per(1)
+      @contents = @web_chapter.contents.unscope(:order).page(params[:page]).per(1)
     end
 
     private

@@ -45,19 +45,20 @@ class WebBook < ApplicationRecord
   def download(opts={})
     dir_path = "#{Rails.root}/ebooks/web_books/#{self.web_site_id}"
     url = "#{dir_path}/#{self.name}.txt"
-    return url if File.exists?url
+    #return url if File.exists?url
     FileUtils.mkdir_p(dir_path) unless File.exists?dir_path
     scheduler = Rufus::Scheduler.new
     scheduler.in '3s' do
-      File.open(url, "w") do |txt|
+      File.open(url, "w+") do |txt|
         self.chapters.includes(:contents).unscope(:order).each do |web_chapter, index|
           content = ""
-          web_chapter.contents.unscope(:order).where(position: :asc).each do |web_content|
-            next if web_content.blank?
+          web_chapter.contents.unscope(:order).each do |web_content|
+            next if web_content.content.blank?
             content += web_content.content + "\r\n"
           end
           txt.syswrite(web_chapter.title+"\r\n")
           content = content.to_s.gsub("<br></br>", "<br>")
+          content = content.to_s.gsub("<br>\n<br>\n", "<br>")
           content = content.to_s.gsub("<br>", "\r\n")
           txt.syswrite(content+"\r\n")
         end
