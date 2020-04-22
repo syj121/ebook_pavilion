@@ -8,7 +8,7 @@ module Ebook
 
     def create
       @web_book = WebBook.create(params[:web_book].permit!)
-      result = Snatch.book(@web_book, params)
+      result = @web_book.snatch_book(params)
       redirect_to params[:back]
     end
 

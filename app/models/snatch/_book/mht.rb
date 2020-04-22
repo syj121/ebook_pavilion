@@ -1,77 +1,82 @@
 # 棉花糖小说网 https://www.mht.tw
 module Mht
 
-  extend Configuration
+  extend Common
 
   #抓取类别，返回参数
   def self.categories(opts={})
   end
 
-  def self.book(web_book, opts={})
+  def self.book_block(web_book, opts={})
     book_url = web_book.url
     doc = Snatch.rc(book_url,{ encoding: charset})
     name = doc.css("#info h1")[0].text
     chapter_url = book_url
     code = book_url.split("/").compact.last
-    cover_url = "https://www.mht.tw" + doc.css("#fmimg img").attr("src")
+    cover_url = "https://www.mht.tw" + doc.css("#fmimg img").attr("src").value
     depcit = doc.css("#intro").text.strip
-    cate_name = doc.css(".con_top").text.split(" > ")[1]
+    cate_name = doc.css(".con_top").text.split(">")[1].strip
 
     #作者
     author_name = doc.css("#info p")[0].text.split("：").last
     author_link = "https://www.mht.tw"
-    yield(opts, name: name, chapter_url: chapter_url, cover_url: cover_url, depcit: depcit, cate: {name: cate_name}, author: {name: author_name, author_link: author_link})
+    
+    {name: name, chapter_url: chapter_url, cover_url: cover_url, depcit: depcit, cate: {name: cate_name}, author: {name: author_name, author_link: author_link}}
   end
 
-  def self.chapters(web_book, opts={})
+  def self.chapters_block(web_book, opts={})
     chapter_url = web_book.chapter_url
     doc = Snatch.rc chapter_url, {encoding: charset}
-    doc.css("dt:nth-child(n+2) ~ dd a").each do |a|
+    cs = []
+    doc.css("dl dt:eq(2) ~dd a").each_with_index do |a, index|
       title = a.text.strip
       href = a.attr("href")
       code = href.split(".html").first.split("/").compact.last
       url = "#{chapter_url}#{code}.html"
-      yield(opts, title: title, code: code, url: url)
+      cs << {title: title, url: url, code: code}
     end
+    cs
   end
 
-  #一章分几页，所以，需要进行对应的分页
-  def self.contents(chapter, opts={})
-    chapter_url = save_content(chapter, chapter.url, opts)
-    while chapter_url.end_with?(".html")
+  def self.contents_block(web_chapter, opts = {})
+    cs = []
+    cblock = lambda { |chapter_url|  
+      doc = Snatch.rc chapter_url
+      position = chapter_url.find(/_(.*).html/).to_i
+      content = doc.css("#content").inner_html().split("\t").first
+      content.delete!("... ...") if content.last(7) == "... ..."
+      cs << {content: content, position: position}
+      doc.css("#content a").attr("href").text.strip rescue ""
+    }
+    chapter_url = cblock.call(web_chapter.url)
+    while chapter_url.present?
       chapter_url = "https://www.mht.tw#{chapter_url}"
-      chapter_url = save_content(chapter, chapter_url, opts)
+      chapter_url = cblock.call(chapter_url)
     end
+    cs
   end
 
-  def self.save_content(chapter, chapter_url, opts={})
-    return true if chapter_url.blank?
-    position = chapter_url.scan(/_(.*).html/) || 1
-    c = WebBookContent.find_or_initialize_by(web_chapter_id: chapter.id, position: position)
-    return true if c.id.present?
-    doc = Snatch.rc chapter_url
-    content = doc.css("#content").inner_html().split("\t").first
-    content.delete!("... ...")
-    c.content = content
-    c.save
-    #本章节，下一页的连接
-    next_href = doc.css("#content a").attr("href").text.strip rescue ""
-
-    lot_number = opts[:lot_number]
-    log_p(lot_number, "contents", "mht", content)
-    
-    next_href.to_s
-  end
-
-  def self.log_p(lot_number, method_name, code, msg)
-    msg = "【#{lot_number}】 —— 【#{code.classify}】.#{method_name}  #{msg}"
-    begin
-     @logger ||= Logger.new("log/ebook/snatch/#{Time.now.strftime("%Y%m%d")}.log")
-     @logger.info msg
-     puts msg
-    rescue => e
-     ExceptionNotifier.notify_exception(e) rescue nil
+  def download(web_book, opts={})
+    dir_path = "#{Rails.root}/ebooks/web_books/#{web_book.web_site_id}"
+    url = "#{dir_path}/#{web_book.name}.txt"
+    #return url if File.exists?url
+    FileUtils.mkdir_p(dir_path) unless File.exists?dir_path
+    scheduler = Rufus::Scheduler.new
+    scheduler.in '3s' do
+      File.open(url, "w+") do |txt|
+        web_book.chapters.includes(:contents).each do |web_chapter, index|
+          content = ""
+          web_chapter.contents.each do |web_content|
+            content += web_content.content + "\r\n"
+          end
+          txt.syswrite(web_chapter.title+"\r\n")
+          content = "\r\t  #{content}" 
+          content = content.to_s.gsub("<br>", "\r\n")
+          txt.syswrite(content+"\r\n")
+        end
+      end
     end
+    return nil
   end
 
 end

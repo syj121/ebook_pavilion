@@ -1,22 +1,22 @@
 # 2K小说 https://www.fpzw.com/
 module Fpzw
 
-  def self.web_site
-    @web_site ||= WebSite.find_by(code: "fpzw")   
-  end
+  extend Common
 
   #抓取类别，返回参数
-  def self.categories(opts={})
-    doc = Snatch.rc "https://www.fpzw.com/"
+  def self.categories_block(opts={})
+    doc = Snatch.rc web_site.url
+    cs = []
     doc.css(".nav2 a.book_sort").each do |a|
       code = a.attr("href").split("/").last
       url = "https://www.fpzw.com/#{code}"
       name = a.text.strip
-      yield(opts, code: code, url: url, name: name)
+      cs << {code: code, url: url, name: name}
     end
+    cs
   end
 
-  def self.book(web_book, opts={})
+  def self.book_block(web_book, opts={})
     url = web_book.url
     doc = Snatch.rc(url)
     a = doc.css("#title h2 a")[0]
@@ -31,26 +31,29 @@ module Fpzw
     author_a = doc.css("#title h2 em a")
     author_name = author_a.text.strip
     author_link = "https://www.fpzw.com#{author_a.attr("href")}"
-    yield(opts, name: name, chapter_url: chapter_url, cover_url: cover_url, depcit: depcit, cate: {name: cate_name}, author: {name: author_name, url: author_link})
+    
+    {name: name, chapter_url: chapter_url, cover_url: cover_url, depcit: depcit, cate: {name: cate_name}, author: {name: author_name, url: author_link}}
   end
 
-  def self.chapters(web_book, opts={})
+  def self.chapters_block(web_book, opts={})
     chapter_url = web_book.chapter_url
     doc = Snatch.rc chapter_url
+    cs = []
     doc.css(".book > dd a").each_with_index do |a, index|
       next if index < 4
       title = a.text.strip
       href = a.attr("href")
       code = href.split("html").first
       url = "#{chapter_url}#{href}"
-      yield(opts, title: title, code: code, url: url)
+      cs << {title: title, url: url, code: code}
     end
+    cs
   end
 
   def self.contents(chapter, opts={})
     doc = Snatch.rc(chapter.url, {encoding: "gbk"})
     content = doc.css(".Text").inner_html().split("</script>").last.gsub("2k小说阅读网","")
-    yield(opts, content: content)
+    [{position: 1, content: content}]
   end
 
 end

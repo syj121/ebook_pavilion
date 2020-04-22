@@ -29,6 +29,14 @@ class String
   def to_utf8
     encode("UTF-8", :undef => :replace, :replace => "?", :invalid => :replace).chars.select{|i| i.valid_encoding?}.join
   end
+
+  def const!
+    classify.constantize rescue NilClass
+  end
+
+  def find(regex)
+    self.scan(regex).flatten.first.presence
+  end
 end
 
 #active_record 通用方法

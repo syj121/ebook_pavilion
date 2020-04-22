@@ -35,36 +35,21 @@ class WebBook < ApplicationRecord
     wau
   end
 
-  #源网站图书下载，返回下载URL
-  # r   只读模式。文件指针被放置在文件的开头。这是默认模式。
-  # r+  读写模式。文件指针被放置在文件的开头。
-  # w   只写模式。如果文件存在，则重写文件。如果文件不存在，则创建一个新文件用于写入。
-  # w+  读写模式。如果文件存在，则重写已存在的文件。如果文件不存在，则创建一个新文件用于读写。
-  # a   只写模式。如果文件存在，则文件指针被放置在文件的末尾。也就是说，文件是追加模式。如果文件不存在，则创建一个新文件用于写入。
-  # a+  读写模式。如果文件存在，则文件指针被放置在文件的末尾。也就是说，文件是追加模式。如果文件不存在，则创建一个新文件用于读写。
-  def download(opts={})
-    dir_path = "#{Rails.root}/ebooks/web_books/#{self.web_site_id}"
-    url = "#{dir_path}/#{self.name}.txt"
-    #return url if File.exists?url
-    FileUtils.mkdir_p(dir_path) unless File.exists?dir_path
-    scheduler = Rufus::Scheduler.new
-    scheduler.in '3s' do
-      File.open(url, "w+") do |txt|
-        self.chapters.includes(:contents).unscope(:order).each do |web_chapter, index|
-          content = ""
-          web_chapter.contents.unscope(:order).each do |web_content|
-            next if web_content.content.blank?
-            content += web_content.content + "\r\n"
-          end
-          txt.syswrite(web_chapter.title+"\r\n")
-          content = content.to_s.gsub("<br></br>", "<br>")
-          content = content.to_s.gsub("<br>\n<br>\n", "<br>")
-          content = content.to_s.gsub("<br>", "\r\n")
-          txt.syswrite(content+"\r\n")
-        end
-      end
-    end
-    return nil
+  #抓取源网站图书
+  def snatch_book(opts = {})
+    code = self.web_site.code
+    code.const!.book(self, opts)
   end
 
+  #抓取原网站图书内容
+  #opts[:force_save]  true 强制更新
+  def snatch_contents(opts = {})
+    code = self.web_site.code
+    const_mod = code.const!
+    chapters.map { |chapter| 
+      #next if chapter.contents.exists? && opts[:force_update].blank?
+      #sleep rand(3)
+      const_mod.contents(chapter) 
+    }
+  end
 end

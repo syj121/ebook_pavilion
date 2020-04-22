@@ -11,14 +11,14 @@
           <tr>
             <td class="textc"><%= @web_chapter.title %></td>
           </tr>
-
+          
           <tr>
             <td><%= @contents[0].content.html_safe rescue "暂无"%></td>
           </tr>
         </tbody>
       </table>
 
-    <%= paginate @contents%>
+      <%= paginate @contents%>
     </div>
   </div>
 </div>
