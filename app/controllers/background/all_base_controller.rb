@@ -2,10 +2,10 @@ module Background
   class AllBaseController < ApplicationController
       
     layout "/#{$settings.frame}/background"
-
     # devise方法验证用户登录
     before_action :authenticate_user!
-
+    #检查
+    before_action :check_auth!
     # 为每个controller自动加载@object
     before_action :load_resource
 
@@ -35,6 +35,10 @@ module Background
       #   # @stand_catalog.log_user = "#{current_user.id}|#{current_user.loginname}"
       #   instance_variable_get("@#{obj_name}").send("log_user=", "#{current_user.id}|#{current_user.loginname}")
       # end
+    end
+
+    def check_auth!
+      #current_role.permisions.exists?(action_path: "all_base/#{controller_name}/#{action_name}")
     end
     
   end

@@ -1,24 +1,8 @@
-# README
+菜单：树结构
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+角色：树结构
 
-Things you may want to cover:
+权限：树结构
 
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+权限表：
+  name: "background/users#index"

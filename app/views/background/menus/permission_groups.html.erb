@@ -1,0 +1,29 @@
+<div class="layui-fluid">
+  <div class="layui-row">
+    <%= simple_form_for @menu, url: save_permision_background_menus_path do |f|%>
+      <table>
+        <tr>
+          <th>选择</th>
+          <th>权限组名称</th>
+        </tr>
+        <% MyPundit.groups.each do |permission|%>
+          <tr>
+            <td><%= permission[:name]%></td>
+          </tr>
+          <% permission[:groups].each do |g|%>
+            <tr>
+              <td><%= g[:name]%></td>
+            </tr>
+            <% g[:groups].each do |k|%>
+              <tr>
+                <td><%= k[:name] %></td>
+              </tr>
+            <% end %>
+          <% end %>
+        <% end %>
+      </table>
+
+      <%= render form_btn, f: f%>
+    <% end %>
+  </div>
+</div>

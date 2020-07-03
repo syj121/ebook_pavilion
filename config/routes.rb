@@ -4,7 +4,7 @@ Rails.application.routes.draw do
 
   root "background/all_out#index"
 
-  #同一后台
+  #统一管理后台
   namespace :background do 
     #后台整体框架的首页
     get "/" => "all_out#index"
@@ -13,9 +13,16 @@ Rails.application.routes.draw do
     #用户管理
     resources :users
     #菜单管理
-    resources :menus
+    resources :menus do 
+      collection do 
+        get :permission_groups
+        post :save_permision
+      end
+    end
+    #角色管理
+    resources :roles
   end
-  #同一后台 background END
+  #统一管理后台 background END
 
   #图书来源
   namespace :ebook do 

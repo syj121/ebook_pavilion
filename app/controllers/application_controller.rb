@@ -15,4 +15,8 @@ class ApplicationController < ActionController::Base
     u.permit(:email, :login_name, :password, :password_confirmation)}
   end
 
+  def current_role
+    @current_role ||= current_user.current_role
+  end
+
 end

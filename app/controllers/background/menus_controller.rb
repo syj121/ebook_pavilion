@@ -11,5 +11,9 @@ module Background
       render json: {success: true}
     end
 
+    def permission_groups
+      @menu = Menu.new
+    end
+
   end 
 end

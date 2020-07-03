@@ -1,0 +1,28 @@
+background:
+  name: 统一管理后台
+  controllers:
+    home:
+      name: "统一后台首页"
+      groups:
+        "后台首页": "index"
+    menus:
+      name: "菜单管理"
+      groups:
+        "新增": "new,create,show"
+        "修改": "edit,update,show"
+        "查看": "index,show"
+        "删除": "index,destroy"
+    roles:
+      name: "角色管理"
+      groups: 
+        "新增": "new,create,show"
+        "修改": "edit,update,show"
+        "查看": "index,show"
+        "删除": "index,destroy"
+    users:
+      name: "用户管理"
+      groups:
+        "新增": "new,create,show"
+        "修改": "edit,update,show"
+        "查看": "index,show"
+        "删除": "index,destroy"
